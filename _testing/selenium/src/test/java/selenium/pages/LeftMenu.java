@@ -4,14 +4,12 @@
  * and open the template in the editor.
  */
 
-package core._testing.selenium.src.test.base;
+package selenium.pages;
 
 /**
  *
  * @author smy
  */
-public enum WebDriverType {
-    FIREFOX,
-    INTERNETEXPLORER,
-    CHROME,
+public class LeftMenu {
+    
 }

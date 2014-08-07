@@ -1,34 +1,9 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="SeleniumSuite" parallel="tests">
-
-    <!--
-    see examples at http://testng.org/doc/documentation-main.html#testng-xml
-
-    <suite-files>
-        <suite-file path="./junit-suite.xml" />
-    </suite-files>
-
-    <test name="TimeOut">
-        <classes>
-            <class name="test.timeout.TimeOutTest" />
-            <class name="test.timeout.TimeOutFromXmlTest"/>
-            <class name="test.timeout.TimeOutThreadLocalSampleTest"/>
-        </classes>
-    </test>
-    -->
-    
     <test name="FirefoxTest">
         <parameter name="browser" value="firefox" />
         <classes>
-            <class name="core.module_system.tests.selenium.SeleniumTest" />
+            <class name="testng.base.SeleniumTestBase" />
         </classes>
     </test>
-    
-    <test name="IETest">
-        <parameter name="browser" value="ie" />
-        <classes>
-            <class name="core.module_system.tests.selenium.SeleniumTest" />
-        </classes>
-    </test>
-
 </suite>

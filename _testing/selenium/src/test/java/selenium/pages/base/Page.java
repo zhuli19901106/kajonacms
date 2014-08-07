@@ -1,49 +1,44 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package selenium.pages.base;
 
+import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.PageFactory;
+import selenium.pages.TopMenu;
+import selenium.properties.MessagesEnum;
 import selenium.webdriver.WebDriverFactory;
 import selenium.webdriver.WebDriverType;
 
 /**
  *
- * @author smy
+ * @author stefan.meyer1@yahoo.de
  */
 public class Page {
     
-    protected static WebDriver driver = null;
+    private WebDriver driver = null;
+    private TopMenu topMenu = null;
     
     
-    public Page() {
-        
-        if(driver == null) {
-            driver = WebDriverFactory.createWebDriver(WebDriverType.FIREFOX);
-        }
+    public Page(WebDriver driver) {
+        this.driver = driver;
+        this.driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        this.topMenu = PageFactory.initElements(this.driver, TopMenu.class);
+    }
+
+    public void mouseOver(String xPathKey) {
+        WebElement element = driver.findElement(By.xpath(MessagesEnum.SELENIUM.getString(xPathKey)));
+    }
+
+    public WebDriver getDriver() {
+        return driver;
+    }
+
+    public TopMenu getTopMenu() {
+        return topMenu;
     }
     
-    public void click(String xPathKey) { 
-        try {
-            driver.findElement(By.xpath(xPathKey)).click();
-        }
-        catch (Exception e) {
-            throw e;
-        }
-    }
-    
-    public void input(String xPathKey, String value) {
-        try {
-            driver.findElement(By.xpath(xPathKey)).sendKeys(value);
-        }
-        catch (Exception e) {
-            throw e;
-        }
-    }
     
     
 }

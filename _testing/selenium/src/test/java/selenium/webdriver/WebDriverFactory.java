@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package selenium.webdriver;
 
 import org.openqa.selenium.WebDriver;
@@ -13,15 +7,16 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
+import selenium.properties.MessagesEnum;
 
 /**
  *
- * @author smy
+ * @author stefan.meyer1@yahoo.de
  */
 public class WebDriverFactory {
     
-    private final static String CHROME_DRIVER_EXECUTABLE = "C:/Dev/selenium/client/webdrivers/chromedriver.exe";
-    private final static String IE_DRIVER_EXECUTABLE = "C:/Dev/selenium/client/webdrivers/IEDriverServer.exe";
+    private final static String CHROME_DRIVER_EXECUTABLE = MessagesEnum.SELENIUM.getString("selenium.webdrivers.chrome.executable.path");
+    private final static String IE_DRIVER_EXECUTABLE = MessagesEnum.TESTNG.getString("selenium.webdrivers.ie.executable.path");
     
     public static WebDriver createWebDriver(WebDriverType type) {
         WebDriver driver = null;
@@ -59,6 +54,7 @@ public class WebDriverFactory {
     }
     
     private static WebDriver createChromeDriver() {
+        System.out.println(CHROME_DRIVER_EXECUTABLE);
         System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_EXECUTABLE);
         
         DesiredCapabilities dc = createDesiredCapabilities(WebDriverType.CHROME);
@@ -68,6 +64,7 @@ public class WebDriverFactory {
     }
     
     private static WebDriver createIEDriver() {
+        System.out.println(IE_DRIVER_EXECUTABLE);
         System.setProperty("webdriver.ie.driver", IE_DRIVER_EXECUTABLE);
         
         DesiredCapabilities dc = createDesiredCapabilities(WebDriverType.INTERNETEXPLORER);

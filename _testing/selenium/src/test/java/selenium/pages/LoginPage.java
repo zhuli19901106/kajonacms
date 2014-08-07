@@ -1,24 +1,43 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package selenium.pages;
 
-import selenium.pages.base.Page;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 /**
  *
- * @author smy
+ * @author stefan.meyer1@yahoo.de
  */
-public class LoginPage extends Page {
+public class LoginPage {
     
+    private WebDriver driver = null;
     
-    public void login() {
-        input("username", "somename");
-        input("password", "somename");
-        click("submitbutton");
+    @FindBy(xpath = "//*[@id='name']")
+    WebElement userName;
+    
+    @FindBy(xpath = "//*[@id='passwort']")
+    WebElement password;
+    
+    @FindBy(xpath = "html/body/div[1]/div/div/div/div[2]/div/form/div[3]/button")
+    WebElement loginBtn;
+    
+    public LoginPage(WebDriver driver) {
+        this.driver = driver;
+    }
+    
+    /**
+     * 
+     * @param username
+     * @param password
+     * @return 
+     */
+    public LandingPage login(String username, String password) {
+        this.userName.sendKeys(username);
+        this.password.sendKeys(password);
+        this.loginBtn.click();
+        
+        return PageFactory.initElements(driver, LandingPage.class);
     }
     
 }

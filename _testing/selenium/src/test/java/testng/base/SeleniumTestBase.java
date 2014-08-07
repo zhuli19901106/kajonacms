@@ -3,10 +3,15 @@ package testng.base;
 import selenium.webdriver.WebDriverFactory;
 import selenium.webdriver.WebDriverType;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterClass;
+import org.testng.Assert;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
 
+/**
+ * 
+ * @author stefan.meyer1@yahoo.de
+ */
 public class SeleniumTestBase
 {
     
@@ -35,8 +40,11 @@ public class SeleniumTestBase
         }
     }
     
+    public void dummyTest() {
+        Assert.assertTrue(true, "Some failure message");
+    }
     
-    @AfterClass
+    @AfterTest
     public void tearDown() {
         driver.quit();
     }
