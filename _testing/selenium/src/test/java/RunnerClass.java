@@ -1,4 +1,6 @@
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 import selenium.pages.LandingPage;
@@ -6,6 +8,7 @@ import selenium.pages.LoginPage;
 import selenium.properties.MessagesEnum;
 import selenium.webdriver.WebDriverFactory;
 import selenium.webdriver.WebDriverType;
+import testng.base.SeleniumTestBase;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,7 +22,11 @@ import selenium.webdriver.WebDriverType;
  */
 public class RunnerClass {
     
+    static final Logger logger = LogManager.getLogger(RunnerClass.class.getName());
+    
     public static void main(String[] args) {
+        
+        logger.error("Something to tlog");
         
         WebDriver driver = WebDriverFactory.createWebDriver(WebDriverType.FIREFOX);
         driver.get(MessagesEnum.SELENIUM.getString("selenium.defaultUrl"));
@@ -28,8 +35,10 @@ public class RunnerClass {
         LandingPage p = loginPage.login(MessagesEnum.SELENIUM.getString("selenium.defaultUserName"), 
                 MessagesEnum.SELENIUM.getString("selenium.defaultPassword"));
         p.getTopMenu().search("pro");
-        //p.showAllUserMessages();
+        p.getTopMenu().showAllUserMessages();
         p.getTopMenu().logOut();
+        
+        driver.quit();
     }
     
 }

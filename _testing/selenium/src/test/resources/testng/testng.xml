@@ -1,9 +1,23 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="SeleniumSuite" parallel="tests">
-    <test name="FirefoxTest">
-        <parameter name="browser" value="firefox" />
+<suite name="LoginSuite">
+    <test name="LoginTest_FF">
+    <parameter name="browser" value="firefox" />
         <classes>
-            <class name="testng.base.SeleniumTestBase" />
+            <class name="testng.login.LoginTest" />
         </classes>
     </test>
+    
+    <!--<test name="LoginTest_Chrome">
+        <parameter name="browser" value="chrome" />
+        <classes>
+            <class name="testng.login.LoginTest" />
+        </classes>
+    </test>
+    
+    <test name="LoginTest_IE">
+        <parameter name="browser" value="ie" />
+        <classes>
+            <class name="testng.login.LoginTest" />
+        </classes>
+    </test>-->
 </suite>

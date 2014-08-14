@@ -1,15 +1,9 @@
 package selenium.pages.base;
 
-import java.util.concurrent.TimeUnit;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
+import selenium.pages.LeftMenu;
 import selenium.pages.TopMenu;
-import selenium.properties.MessagesEnum;
-import selenium.webdriver.WebDriverFactory;
-import selenium.webdriver.WebDriverType;
 
 /**
  *
@@ -17,18 +11,14 @@ import selenium.webdriver.WebDriverType;
  */
 public class Page {
     
-    private WebDriver driver = null;
-    private TopMenu topMenu = null;
-    
+    private static WebDriver driver = null;
+    private static TopMenu topMenu = null;
+    private static LeftMenu leftMenu = null;
     
     public Page(WebDriver driver) {
-        this.driver = driver;
-        this.driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        this.topMenu = PageFactory.initElements(this.driver, TopMenu.class);
-    }
-
-    public void mouseOver(String xPathKey) {
-        WebElement element = driver.findElement(By.xpath(MessagesEnum.SELENIUM.getString(xPathKey)));
+        Page.driver = driver;
+        Page.topMenu = PageFactory.initElements(Page.driver, TopMenu.class);
+        Page.leftMenu = PageFactory.initElements(Page.driver, LeftMenu.class);
     }
 
     public WebDriver getDriver() {
@@ -38,7 +28,4 @@ public class Page {
     public TopMenu getTopMenu() {
         return topMenu;
     }
-    
-    
-    
 }

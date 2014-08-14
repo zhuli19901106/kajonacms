@@ -1,5 +1,6 @@
 package selenium.webdriver;
 
+import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -16,7 +17,7 @@ import selenium.properties.MessagesEnum;
 public class WebDriverFactory {
     
     private final static String CHROME_DRIVER_EXECUTABLE = MessagesEnum.SELENIUM.getString("selenium.webdrivers.chrome.executable.path");
-    private final static String IE_DRIVER_EXECUTABLE = MessagesEnum.TESTNG.getString("selenium.webdrivers.ie.executable.path");
+    private final static String IE_DRIVER_EXECUTABLE = MessagesEnum.SELENIUM.getString("selenium.webdrivers.ie.executable.path");
     
     public static WebDriver createWebDriver(WebDriverType type) {
         WebDriver driver = null;
@@ -43,6 +44,7 @@ public class WebDriverFactory {
             default:
         }
 
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         return driver;
     }
     
@@ -96,7 +98,6 @@ public class WebDriverFactory {
 
             case INTERNETEXPLORER:
                 dc = DesiredCapabilities.internetExplorer();
-                dc.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
                 break;
                 
             case SAFARI:
