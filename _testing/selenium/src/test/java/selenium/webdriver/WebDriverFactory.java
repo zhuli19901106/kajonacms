@@ -1,7 +1,10 @@
 package selenium.webdriver;
 
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.lang3.SystemUtils;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -15,9 +18,42 @@ import selenium.properties.MessagesEnum;
  * @author stefan.meyer1@yahoo.de
  */
 public class WebDriverFactory {
+    public static final long DEFAULT_IMPLICIT_WAIT_TIME = 15;
     
-    private final static String CHROME_DRIVER_EXECUTABLE = MessagesEnum.SELENIUM.getString("selenium.webdrivers.chrome.executable.path");
-    private final static String IE_DRIVER_EXECUTABLE = MessagesEnum.SELENIUM.getString("selenium.webdrivers.ie.executable.path");
+    
+    
+    private static final String CHROME_DRIVER_EXECUTABLE;
+    private static final String IE_DRIVER_EXECUTABLE;
+    private static final Platform CURRENT_PLATFORM;
+    
+    static {
+        //initialize pathes to the driver servers
+        String currentUserDir = System.getProperty("user.dir");
+        String pathToDrivers = currentUserDir + MessagesEnum.SELENIUM.getString("selenium.dirvers.basepath");
+        
+        if(SystemUtils.IS_OS_WINDOWS) {
+            pathToDrivers += "/windows";
+            CHROME_DRIVER_EXECUTABLE = pathToDrivers + "/chromedriver.exe";
+            IE_DRIVER_EXECUTABLE = pathToDrivers + "/IEDriverServer_x86.exe";
+            CURRENT_PLATFORM = Platform.WINDOWS;
+        }
+        else if(SystemUtils.IS_OS_LINUX) {
+            pathToDrivers += "/unix";
+            CHROME_DRIVER_EXECUTABLE = pathToDrivers + "/chromedriver";
+            IE_DRIVER_EXECUTABLE = null;
+            CURRENT_PLATFORM = Platform.LINUX;
+        }
+        else if (SystemUtils.IS_OS_MAC) {
+            CHROME_DRIVER_EXECUTABLE = pathToDrivers + "/chromedriver";
+            IE_DRIVER_EXECUTABLE = null;
+            CURRENT_PLATFORM = Platform.MAC;
+        }
+        else {
+            CHROME_DRIVER_EXECUTABLE = null;
+            IE_DRIVER_EXECUTABLE = null;
+            CURRENT_PLATFORM = null;
+        }
+    }
     
     public static WebDriver createWebDriver(WebDriverType type) {
         WebDriver driver = null;
@@ -26,25 +62,21 @@ public class WebDriverFactory {
             case FIREFOX:
                 driver = createFirefoxDriver();
                 break;
-
             case CHROME:
                 driver = createChromeDriver();
                 break;
-
             case INTERNETEXPLORER:
                 driver = createIEDriver();
-                //Used if the site is restricted and you continue to it
-                //driver.navigate().to("javascript:document.getElementById('overridelink').click()");
                 break;
-                
             case SAFARI:
                 driver= createSafariDriver();
                 break;
-                
             default:
+                throw new WebDriverException("Could not initialze WebDrive instance. Available webdrivers are Firefox, Chrome, Internet Explorer and Safari");
         }
 
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(DEFAULT_IMPLICIT_WAIT_TIME, TimeUnit.SECONDS);
+        
         return driver;
     }
     
@@ -82,7 +114,6 @@ public class WebDriverFactory {
         return driver;
     }
     
-    
     private static DesiredCapabilities createDesiredCapabilities(WebDriverType type) 
     {
         DesiredCapabilities dc = null;    
@@ -104,6 +135,7 @@ public class WebDriverFactory {
                 dc = DesiredCapabilities.safari();
         }
         
+        dc.setPlatform(CURRENT_PLATFORM);
         dc.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
         dc.setCapability(CapabilityType.SUPPORTS_JAVASCRIPT, true);
         return dc;

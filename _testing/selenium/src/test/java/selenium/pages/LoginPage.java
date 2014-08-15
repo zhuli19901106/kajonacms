@@ -43,7 +43,7 @@ public class LoginPage {
         this.password.sendKeys(password);
         this.loginBtn.click();
         
-        if(SeleniumUtil.isElementPresent(driver, By.xpath(Constants.LOGIN_ERROR_BOX))) {
+        if(SeleniumUtil.isElementPresentAndDisplayed(driver, By.xpath(Constants.LOGIN_ERROR_BOX))) {
             return null;
         }
         

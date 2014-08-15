@@ -65,7 +65,7 @@ public class SeleniumTestBase
         driver.get(MessagesEnum.SELENIUM.getString("selenium.defaultUrl"));
         
         //IE Hack for https
-        if(SeleniumUtil.isElementPresent(driver, By.xpath(Constants.IE_SSL_OVERRIDELINK))) {
+        if(SeleniumUtil.isElementPresentAndDisplayed(driver, By.xpath(Constants.IE_SSL_OVERRIDELINK))) {
             driver.findElement(By.xpath(Constants.IE_SSL_OVERRIDELINK)).click();
         }
         

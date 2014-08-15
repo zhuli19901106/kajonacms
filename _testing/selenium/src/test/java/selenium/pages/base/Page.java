@@ -28,4 +28,8 @@ public class Page {
     public TopMenu getTopMenu() {
         return topMenu;
     }
+    
+    public LeftMenu getLeftMenu() {
+        return leftMenu;
+    }
 }
