@@ -24,7 +24,6 @@ public class WebDriverFactory {
     
     private static final String CHROME_DRIVER_EXECUTABLE;
     private static final String IE_DRIVER_EXECUTABLE;
-    private static final Platform CURRENT_PLATFORM;
     
     static {
         //initialize pathes to the driver servers
@@ -35,23 +34,19 @@ public class WebDriverFactory {
             pathToDrivers += "/windows";
             CHROME_DRIVER_EXECUTABLE = pathToDrivers + "/chromedriver.exe";
             IE_DRIVER_EXECUTABLE = pathToDrivers + "/IEDriverServer_x86.exe";
-            CURRENT_PLATFORM = Platform.WINDOWS;
         }
         else if(SystemUtils.IS_OS_LINUX) {
             pathToDrivers += "/unix";
             CHROME_DRIVER_EXECUTABLE = pathToDrivers + "/chromedriver";
             IE_DRIVER_EXECUTABLE = null;
-            CURRENT_PLATFORM = Platform.LINUX;
         }
         else if (SystemUtils.IS_OS_MAC) {
             CHROME_DRIVER_EXECUTABLE = pathToDrivers + "/chromedriver";
             IE_DRIVER_EXECUTABLE = null;
-            CURRENT_PLATFORM = Platform.MAC;
         }
         else {
             CHROME_DRIVER_EXECUTABLE = null;
             IE_DRIVER_EXECUTABLE = null;
-            CURRENT_PLATFORM = null;
         }
     }
     
@@ -135,7 +130,6 @@ public class WebDriverFactory {
                 dc = DesiredCapabilities.safari();
         }
         
-        dc.setPlatform(CURRENT_PLATFORM);
         dc.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
         dc.setCapability(CapabilityType.SUPPORTS_JAVASCRIPT, true);
         return dc;

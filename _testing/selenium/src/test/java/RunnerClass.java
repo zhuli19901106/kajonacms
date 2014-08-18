@@ -31,7 +31,7 @@ public class RunnerClass {
         
         logger.error("Something to tlog");
         
-        WebDriver driver = WebDriverFactory.createWebDriver(WebDriverType.CHROME);
+        WebDriver driver = WebDriverFactory.createWebDriver(WebDriverType.FIREFOX);
         driver.get(MessagesEnum.SELENIUM.getString("selenium.defaultUrl"));
         //IE Hack for https
         if (SeleniumUtil.isElementPresentAndDisplayed(driver, By.xpath(Constants.IE_SSL_OVERRIDELINK))) {
