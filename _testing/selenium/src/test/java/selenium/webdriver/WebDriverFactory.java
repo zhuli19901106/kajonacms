@@ -41,6 +41,7 @@ public class WebDriverFactory {
             IE_DRIVER_EXECUTABLE = null;
         }
         else if (SystemUtils.IS_OS_MAC) {
+            pathToDrivers += "/unix";
             CHROME_DRIVER_EXECUTABLE = pathToDrivers + "/chromedriver";
             IE_DRIVER_EXECUTABLE = null;
         }
