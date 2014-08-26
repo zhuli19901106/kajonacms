@@ -1,4 +1,4 @@
-package selenium.pages;
+package selenium.pages.backend;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -12,7 +12,7 @@ import selenium.pages.util.SeleniumUtil;
  *
  * @author stefan.meyer1@yahoo.de
  */
-public class LoginPage {
+public class AdminLoginPage {
     
     private WebDriver driver = null;
     
@@ -28,7 +28,7 @@ public class LoginPage {
     @FindBy(xpath = Constants.LOGIN_ERROR_BOX)
     private WebElement loginErrorBox;
     
-    public LoginPage(WebDriver driver) {
+    public AdminLoginPage(WebDriver driver) {
         this.driver = driver;
     }
     
@@ -38,7 +38,7 @@ public class LoginPage {
      * @param password
      * @return 
      */
-    public LandingPage login(String username, String password) {
+    public LandingAdminBasePage login(String username, String password) {
         this.userName.sendKeys(username);
         this.password.sendKeys(password);
         this.loginBtn.click();
@@ -47,6 +47,6 @@ public class LoginPage {
             return null;
         }
         
-        return PageFactory.initElements(driver, LandingPage.class);
+        return PageFactory.initElements(driver, LandingAdminBasePage.class);
     }
 }

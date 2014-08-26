@@ -2,8 +2,8 @@ package testng.login;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import selenium.pages.LandingPage;
-import selenium.pages.LoginPage;
+import selenium.pages.backend.AdminLoginPage;
+import selenium.pages.backend.LandingAdminBasePage;
 import testng.base.SeleniumTestBase;
 
 /**
@@ -12,7 +12,7 @@ import testng.base.SeleniumTestBase;
  */
 public class LoginTest extends SeleniumTestBase {
     
-    LandingPage page = null;
+    LandingAdminBasePage page = null;
     
     
     @Test
@@ -28,8 +28,8 @@ public class LoginTest extends SeleniumTestBase {
     
     @Test(dependsOnMethods = {"login", "chooseAspect"} )
     public void logout() {
-        LoginPage loginPage = page.getTopMenu().logOut();
-        Assert.assertNotNull(loginPage);
+        AdminLoginPage adminLoginPage = page.getTopMenu().logOut();
+        Assert.assertNotNull(adminLoginPage);
     }
     
 }

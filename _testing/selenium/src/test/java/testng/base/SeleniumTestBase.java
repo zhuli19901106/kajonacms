@@ -3,6 +3,8 @@ package testng.base;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
+import selenium.pages.backend.AdminLoginPage;
+import selenium.pages.backend.LandingAdminBasePage;
 import selenium.webdriver.WebDriverFactory;
 import selenium.webdriver.WebDriverType;
 import org.openqa.selenium.WebDriver;
@@ -10,8 +12,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
-import selenium.pages.LandingPage;
-import selenium.pages.LoginPage;
 import selenium.pages.util.Constants;
 import selenium.pages.util.SeleniumUtil;
 import selenium.properties.MessagesEnum;
@@ -61,7 +61,7 @@ public class SeleniumTestBase
     }
     
     
-    public LandingPage login(String userName, String password) {
+    public LandingAdminBasePage login(String userName, String password) {
         driver.get(MessagesEnum.SELENIUM.getString("selenium.defaultUrl"));
         
         //IE Hack for https
@@ -69,8 +69,8 @@ public class SeleniumTestBase
             driver.findElement(By.xpath(Constants.IE_SSL_OVERRIDELINK)).click();
         }
         
-        LoginPage p = PageFactory.initElements(driver, LoginPage.class);
-        LandingPage page = p.login(userName, password);
+        AdminLoginPage p = PageFactory.initElements(driver, AdminLoginPage.class);
+        LandingAdminBasePage page = p.login(userName, password);
         
         return page;
     }

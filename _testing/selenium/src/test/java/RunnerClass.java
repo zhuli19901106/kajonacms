@@ -4,14 +4,13 @@ import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
-import selenium.pages.LandingPage;
-import selenium.pages.LoginPage;
+import selenium.pages.backend.AdminLoginPage;
+import selenium.pages.backend.LandingAdminBasePage;
 import selenium.pages.util.Constants;
 import selenium.pages.util.SeleniumUtil;
 import selenium.properties.MessagesEnum;
 import selenium.webdriver.WebDriverFactory;
 import selenium.webdriver.WebDriverType;
-import testng.base.SeleniumTestBase;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -39,8 +38,8 @@ public class RunnerClass {
         }
         
         
-        LoginPage loginPage = PageFactory.initElements(driver, LoginPage.class);
-        LandingPage p = loginPage.login(MessagesEnum.SELENIUM.getString("selenium.defaultUserName"), 
+        AdminLoginPage adminLoginPage = PageFactory.initElements(driver, AdminLoginPage.class);
+        LandingAdminBasePage p = adminLoginPage.login(MessagesEnum.SELENIUM.getString("selenium.defaultUserName"),
                 MessagesEnum.SELENIUM.getString("selenium.defaultPassword"));
         p.getTopMenu().search("pro");
         p.getTopMenu().showAllUserMessages();

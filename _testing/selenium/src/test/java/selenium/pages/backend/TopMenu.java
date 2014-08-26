@@ -1,4 +1,4 @@
-package selenium.pages;
+package selenium.pages.backend;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -42,7 +42,7 @@ public class TopMenu {
         this.driver = driver;
     }
 
-    public LoginPage logOut() {
+    public AdminLoginPage logOut() {
         SeleniumUtil.moveToElement(driver, lnkUserMenu);
         lnkUserMenuLogOut.click();
 
@@ -55,7 +55,7 @@ public class TopMenu {
             return null;
         }
 
-        return PageFactory.initElements(driver, LoginPage.class);
+        return PageFactory.initElements(driver, AdminLoginPage.class);
     }
 
     public void search(String searchTerm) {

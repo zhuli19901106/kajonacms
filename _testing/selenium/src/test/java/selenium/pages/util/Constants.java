@@ -8,7 +8,7 @@ public class Constants {
 
     public static final String IE_SSL_OVERRIDELINK = "//*[@id='overridelink']";
 
-    //Login Page
+    //Login AdminBasePage
     public static final String LOGIN_CONTAINER                              = "//*[@id='loginContainer_content']";
     public static final String LOGIN_INPUT_USERNAME                         = LOGIN_CONTAINER + "//*[@id='name']";
     public static final String LOGIN_INPUT_PASSWORD                         = LOGIN_CONTAINER + "//*[@id='passwort']";

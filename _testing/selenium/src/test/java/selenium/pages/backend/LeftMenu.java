@@ -1,4 +1,4 @@
-package selenium.pages;
+package selenium.pages.backend;
 
 /**
  *

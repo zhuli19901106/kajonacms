@@ -1,24 +1,24 @@
-package selenium.pages.base;
+package selenium.pages.backend.base;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
-import selenium.pages.LeftMenu;
-import selenium.pages.TopMenu;
+import selenium.pages.backend.LeftMenu;
+import selenium.pages.backend.TopMenu;
 
 /**
  *
  * @author stefan.meyer1@yahoo.de
  */
-public class Page {
+public class AdminBasePage {
     
     private static WebDriver driver = null;
     private static TopMenu topMenu = null;
     private static LeftMenu leftMenu = null;
     
-    public Page(WebDriver driver) {
-        Page.driver = driver;
-        Page.topMenu = PageFactory.initElements(Page.driver, TopMenu.class);
-        Page.leftMenu = PageFactory.initElements(Page.driver, LeftMenu.class);
+    public AdminBasePage(WebDriver driver) {
+        AdminBasePage.driver = driver;
+        AdminBasePage.topMenu = PageFactory.initElements(AdminBasePage.driver, TopMenu.class);
+        AdminBasePage.leftMenu = PageFactory.initElements(AdminBasePage.driver, LeftMenu.class);
     }
 
     public WebDriver getDriver() {
