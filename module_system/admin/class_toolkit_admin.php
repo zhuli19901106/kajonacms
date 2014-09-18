@@ -1062,11 +1062,12 @@ class class_toolkit_admin extends class_toolkit {
      *
      * @return string
      */
-    public function dataTable(array $arrHeader = null, array $arrValues, $strTableCssAddon = "") {
+    public function dataTable(array $arrHeader = null, array $arrValues, $strTableCssAddon = "", $bitListFilterable = true) {
         $strReturn = "";
         //The Table header & the templates
         $strTemplateID = $this->objTemplate->readTemplate("/elements.tpl", "datalist_header");
-        $strReturn .= $this->objTemplate->fillTemplate(array("cssaddon" => $strTableCssAddon), $strTemplateID);
+        $strTableId = "table_".generateSystemid();
+        $strReturn .= $this->objTemplate->fillTemplate(array("cssaddon" => $strTableCssAddon, "tableid" => $strTableId), $strTemplateID);
 
         $strTemplateHeaderHeaderID = $this->objTemplate->readTemplate("/elements.tpl", "datalist_column_head_header");
         $strTemplateHeaderContentID = $this->objTemplate->readTemplate("/elements.tpl", "datalist_column_head");
@@ -1078,15 +1079,18 @@ class class_toolkit_admin extends class_toolkit {
 
         //Starting with the header, column by column
         if(is_array($arrHeader)) {
+            $strReturn .= "<thead>";
             $strReturn .= $this->objTemplate->fillTemplate(array(), $strTemplateHeaderHeaderID);
 
             foreach ($arrHeader as $strCssClass => $strHeader)
                 $strReturn .= $this->objTemplate->fillTemplate(array("value" => $strHeader, "class" => $strCssClass), $strTemplateHeaderContentID);
 
             $strReturn .= $this->objTemplate->fillTemplate(array(), $strTemplateHeaderFooterID);
+            $strReturn .= "</thead>";
         }
 
         //And the content, row by row, column by column
+        $strReturn .= "<tbody>";
         foreach ($arrValues as $arrValueRow) {
             $strReturn .= $this->objTemplate->fillTemplate(array(), $strTemplateContentHeaderID);
 
@@ -1095,10 +1099,33 @@ class class_toolkit_admin extends class_toolkit {
 
             $strReturn .= $this->objTemplate->fillTemplate(array(), $strTemplateContentFooterID);
         }
+        $strReturn .= "</tbody>";
 
         //And the footer
         $strTemplateID = $this->objTemplate->readTemplate("/elements.tpl", "datalist_footer");
         $strReturn .= $this->objTemplate->fillTemplate(array(), $strTemplateID);
+
+        if($bitListFilterable) {
+            $strCoreDirectory = class_resourceloader::getInstance()->getCorePathForModule("module_v4skin");
+            $strReturn .= "<script type='text/javascript'>
+            KAJONA.admin.loader.loadFile([
+                    '{$strCoreDirectory}/module_v4skin/admin/skins/kajona_v4/js/dataTables/js/jquery.dataTables.js', '{$strCoreDirectory}/module_v4skin/admin/skins/kajona_v4/js/dataTables/css/jquery.dataTables.css'], function() {
+                    KAJONA.admin.loader.loadFile([
+                        '{$strCoreDirectory}/module_v4skin/admin/skins/kajona_v4/js/dataTables/js/extensions/Responsive/js/dataTables.responsive.js',
+                        '{$strCoreDirectory}/module_v4skin/admin/skins/kajona_v4/js/dataTables/js/extensions/Responsive/css/dataTables.responsive.css',
+                        '{$strCoreDirectory}/module_v4skin/admin/skins/kajona_v4/js/dataTables/js/plugins/bootstrap2/js/dataTables.bootstrap.js',
+                        '{$strCoreDirectory}/module_v4skin/admin/skins/kajona_v4/dataTables/js/plugins/bootstrap2/css/dataTables.bootstrap.css'
+                    ], function() {
+                        $('#$strTableId').dataTable({// apply filterTable to all tables on this page
+                            'paging':   false,
+                            'ordering': false,
+                            'info':     false,
+                            'responsive':   false
+                        });
+                    });
+                });
+        </script>";
+        }
         return $strReturn;
     }
 

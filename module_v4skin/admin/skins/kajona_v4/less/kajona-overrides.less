@@ -1337,6 +1337,14 @@ label {
         vertical-align: middle;
     }
 
+    thead {
+        border-top: 1px solid @tableBorder;
+        tr td, tr th {
+            background-color: @tableBackgroundAccent;
+        }
+    }
+
+
     .progress {
         margin: 0;
         min-width: 40px;
@@ -1345,6 +1353,7 @@ label {
     &.admintable {
 
         empty-cells: hide;
+
 
         tbody.disabled {
             opacity: .5;
