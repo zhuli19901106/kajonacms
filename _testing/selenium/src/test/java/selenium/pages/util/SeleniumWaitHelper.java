@@ -3,6 +3,7 @@ package selenium.pages.util;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import selenium.webdriver.WebDriverFactory;
@@ -20,11 +21,13 @@ public class SeleniumWaitHelper {
      * @param timeOutInSeconds - number of secons to wait until an exception is
      * being thrown
      */
-    public static void waitForElementUntilPresent(WebDriver driver, By locator, long timeOutInSeconds) {
+    public static WebElement waitForElementUntilPresent(WebDriver driver, By locator, long timeOutInSeconds) {
         SeleniumWaitHelper.nullifyImplicitWait(driver);
         WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        WebElement webElement = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         SeleniumWaitHelper.resetImplicitWait(driver);
+
+        return webElement;
     }
 
     /**
