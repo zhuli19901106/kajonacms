@@ -13,7 +13,7 @@ KAJONA.admin.dashboard = {
         KAJONA.admin.ajax.genericAjaxCall('dashboard', 'deleteWidget', strSystemid, function(data, status, jqXHR) {
             if (status == 'success') {
 
-                $("li[data-systemid="+strSystemid+"]").remove();
+                $("div[data-systemid="+strSystemid+"]").remove();
                 KAJONA.admin.statusDisplay.displayXMLMessage(data);
                 jsDialog_1.hide();
 
@@ -35,7 +35,7 @@ KAJONA.admin.dashboard = {
                     var $parent = content.parent();
                     content.remove();
 
-                    var $newNode = $("<div></div>").append($.parseJSON(data));
+                    var $newNode = $("<div class='content'></div>").append($.parseJSON(data));
                     $parent.append($newNode);
 
                     //TODO use jquerys eval?
@@ -48,23 +48,30 @@ KAJONA.admin.dashboard = {
             });
         });
 
-        $("ul.adminwidgetColumn").each(function(index) {
+        $("#dashboard").find(".column").each(function(index) {
 
+            //$("#dashboard").sortable({
             $(this).sortable({
-                items: 'li.dbEntry',
+                items: 'div.dbEntry',
                 handle: 'h2',
+                dropOnEmpty : true,
                 forcePlaceholderSize: true,
                 cursor: 'move',
-                connectWith: '.adminwidgetColumn',
-                placeholder: 'dashboardPlaceholder',
+                connectWith: '.column',
+                placeholder: 'dashboardPlaceholder col-sm-12',
                 stop: function(event, ui) {
                     //search list for new pos
                     var intPos = 0;
                     $(".dbEntry").each(function(index) {
                         intPos++;
+                        debugger;
                         if($(this).data("systemid") == ui.item.data("systemid")) {
-                            KAJONA.admin.ajax.genericAjaxCall("dashboard", "setDashboardPosition", ui.item.data("systemid") + "&listPos=" + intPos+"&listId="+ui.item.closest('ul').attr('id'), KAJONA.admin.ajax.regularCallback)
-                            return false;
+                            console.log("set to pos "+intPos);
+
+
+
+                            //KAJONA.admin.ajax.genericAjaxCall("dashboard", "setDashboardPosition", ui.item.data("systemid") + "&listPos=" + intPos+"&listId="+ui.item.closest('ul').attr('id'), KAJONA.admin.ajax.regularCallback)
+                            //return false;
                         }
                     });
                 },

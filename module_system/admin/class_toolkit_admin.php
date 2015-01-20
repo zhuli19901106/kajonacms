@@ -1850,33 +1850,11 @@ JS;
     // --- Adminwidget / Dashboard --------------------------------------------------------------------------
 
 
-    public function getMainDashboard(array $arrColumns) {
+    public function getMainDashboard($strWidgetContent) {
         return $this->objTemplate->fillTemplate(
-            array("entries" => implode("", $arrColumns)),
+            array("entries" => $strWidgetContent),
             $this->objTemplate->readTemplate("/elements.tpl", "dashboard_wrapper")
         );
-    }
-
-    /**
-     * Generates the header for a column on the dashboard.
-     * Inits the ajax-componentes for this list
-     *
-     * @param string $strColumnId
-     * @return string
-     */
-    public function getDashboardColumnHeader($strColumnId) {
-        $strTemplateID = $this->objTemplate->readTemplate("/elements.tpl", "dashboard_column_header");
-        return $this->objTemplate->fillTemplate(array("column_id" => $strColumnId), $strTemplateID);
-    }
-
-    /**
-     * The footer of a dashboard column.
-     *
-     * @return string
-     */
-    public function getDashboardColumnFooter() {
-        $strTemplateID = $this->objTemplate->readTemplate("/elements.tpl", "dashboard_column_footer");
-        return $this->objTemplate->fillTemplate(array(), $strTemplateID);
     }
 
     /**

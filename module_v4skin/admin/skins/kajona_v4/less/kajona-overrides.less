@@ -1103,22 +1103,7 @@ footer {
 
 
     /* DASHBOARD */
-    table.dashBoard {
-        width: 100%;
-        td {
-            width: 33%;
-            max-width: 33%;
-            vertical-align: top;
-
-            ul {
-                padding: 10px 0;
-                margin: 10px 10px;
-            }
-        }
-
-        li {
-            list-style: none;
-        }
+    .dashboard {
 
         .dbEntry {
             .adminwidgetactions {
@@ -1126,10 +1111,10 @@ footer {
                 margin-top: -35px;
             }
 
-
-            .listButton {
-                display: inline;
+            .content {
+                padding-top: 5px;
             }
+
         }
 
         .dashboardPlaceholder {
@@ -1138,12 +1123,15 @@ footer {
             border: 3px dotted @gray;
         }
 
-        .adminwidgetColumn {
-            .additionalNameContent {
-                font-size: @font-size-small - 1;
-                margin-top: -@font-size-small;
+        .additionalNameContent {
+            font-size: @font-size-small - 1;
+            margin-top: -@font-size-small;
 
-            }
+        }
+
+        .column {
+            min-height: 100px;
+            padding-bottom: 100px;
         }
     }
 }

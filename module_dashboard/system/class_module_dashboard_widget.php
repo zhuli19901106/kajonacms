@@ -121,7 +121,7 @@ class class_module_dashboard_widget extends class_model implements interface_mod
 
         $arrParams = array();
         $arrParams[] = $strUserId;
-        $arrParams[] = $strColumn;
+
         $arrParams[] = self::getWidgetsRootNodeForUser($strUserId, $strAspectFilter);
 
         $strQuery = "SELECT *
@@ -132,10 +132,8 @@ class class_module_dashboard_widget extends class_model implements interface_mod
                         ON system_id = system_date_id
         			 WHERE dashboard_user = ?
         			   AND system_id = right_id
-        			   AND dashboard_column = ?
         			   AND dashboard_id = system_id
         			   AND system_prev_id = ?
-                       /*".$strAspectFilter."*/
         	     ORDER BY system_sort ASC ";
 
         $arrRows = $this->objDB->getPArray($strQuery, $arrParams);

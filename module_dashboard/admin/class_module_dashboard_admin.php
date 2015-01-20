@@ -25,15 +25,18 @@ class class_module_dashboard_admin extends class_admin_controller implements int
     private $strStartYearKey = "DASHBOARD_CALENDAR_START_YEAR";
 
 
+    static $intCount = 0;
+
+
     /**
      * @return array
      */
     public function getOutputModuleNavi() {
         $arrReturn = array();
-        $arrReturn[] = array("view", getLinkAdmin($this->arrModule["modul"], "list", "", $this->getLang("modul_titel"), "", "", true, "adminnavi"));
-        $arrReturn[] = array("view", getLinkAdmin($this->arrModule["modul"], "calendar", "", $this->getLang("action_calendar"), "", "", true, "adminnavi"));
+        $arrReturn[] = array("view", class_link::getLinkAdmin($this->arrModule["modul"], "list", "", $this->getLang("modul_titel"), "", "", true, "adminnavi"));
+        $arrReturn[] = array("view", class_link::getLinkAdmin($this->arrModule["modul"], "calendar", "", $this->getLang("action_calendar"), "", "", true, "adminnavi"));
         $arrReturn[] = array("", "");
-        $arrReturn[] = array("edit", getLinkAdmin($this->arrModule["modul"], "addWidgetToDashboard", "", $this->getLang("action_add_widget_to_dashboard"), "", "", true, "adminnavi"));
+        $arrReturn[] = array("edit", class_link::getLinkAdmin($this->arrModule["modul"], "addWidgetToDashboard", "", $this->getLang("action_add_widget_to_dashboard"), "", "", true, "adminnavi"));
         return $arrReturn;
     }
 
@@ -62,18 +65,11 @@ class class_module_dashboard_admin extends class_admin_controller implements int
         $objDashboardmodel = new class_module_dashboard_widget();
         $arrColumns = array();
         //build each row
-        foreach($this->arrColumnsOnDashboard as $strColumnName) {
-            $strColumnContent = $this->objToolkit->getDashboardColumnHeader($strColumnName);
-            $strWidgetContent = "";
-            foreach($objDashboardmodel->getWidgetsForColumn($strColumnName, class_module_system_aspect::getCurrentAspectId()) as $objOneSystemmodel) {
-                $strWidgetContent .= $this->layoutAdminWidget($objOneSystemmodel);
-            }
-
-            $strColumnContent .= $strWidgetContent;
-            $strColumnContent .= $this->objToolkit->getDashboardColumnFooter();
-            $arrColumns[] = $strColumnContent;
+        $strWidgetContent = "";
+        foreach($objDashboardmodel->getWidgetsForColumn(null, class_module_system_aspect::getCurrentAspectId()) as $objOneSystemmodel) {
+            $strWidgetContent .= $this->layoutAdminWidget($objOneSystemmodel);
         }
-        $strReturn .= $this->objToolkit->getMainDashboard($arrColumns);
+        $strReturn .= $this->objToolkit->getMainDashboard($strWidgetContent);
 
         return $strReturn;
     }
@@ -90,7 +86,7 @@ class class_module_dashboard_admin extends class_admin_controller implements int
         $objConcreteWidget = $objDashboardWidget->getConcreteAdminwidget();
 
         $strWidgetId = $objConcreteWidget->getSystemid();
-        $strWidgetName = $objConcreteWidget->getWidgetName();
+        $strWidgetName = ++self::$intCount." ".$objConcreteWidget->getWidgetName();
         $strWidgetNameAdditionalContent = $objConcreteWidget->getWidgetNameAdditionalContent();
 
         $strWidgetContent .= $this->objToolkit->getDashboardWidgetEncloser(

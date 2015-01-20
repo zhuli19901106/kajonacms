@@ -1343,13 +1343,6 @@ The language switch surrounds the buttons
     </div>
 </adminwidget_widget>
 
-<dashboard_column_header>
-
-</dashboard_column_header>
-
-<dashboard_column_footer>
-
-</dashboard_column_footer>
 
 <dashboard_encloser>
 	<div class="dbEntry col-sm-12" data-systemid="%%entryid%%">%%content%%</div>
@@ -1365,10 +1358,9 @@ The language switch surrounds the buttons
 
 <dashboard_wrapper>
 
-    <div class="row" id="dashboard" data-columns>
+    <div class="row dashboard" id="dashboard" data-columns>
           %%entries%%
     </div>
-
 
 
     <script src="_skinwebpath_/js/salvattore/salvattore.min.js?_system_browser_cachebuster_"></script>
