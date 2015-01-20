@@ -1334,25 +1334,25 @@ The language switch surrounds the buttons
 -- WIDGETS / DASHBOAORD  --------------------------------------------------------------------------------
 <adminwidget_widget>
     <div class="well well-sm">
-    <h2 class="">%%widget_name%%</h2>
-    <div class="adminwidgetactions pull-right">%%widget_edit%% %%widget_delete%%</div>
-    <div class="additionalNameContent">%%widget_name_additional_content%%</div>
-    <div class="content loadingContainer">
-        %%widget_content%%
-    </div>
+        <h2 class="">%%widget_name%%</h2>
+        <div class="adminwidgetactions pull-right">%%widget_edit%% %%widget_delete%%</div>
+        <div class="additionalNameContent">%%widget_name_additional_content%%</div>
+        <div class="content loadingContainer">
+            %%widget_content%%
+        </div>
     </div>
 </adminwidget_widget>
 
 <dashboard_column_header>
-	<td><ul id="%%column_id%%" class="adminwidgetColumn" data-sortable-handle="h2">
+
 </dashboard_column_header>
 
 <dashboard_column_footer>
-	</ul></td>
+
 </dashboard_column_footer>
 
 <dashboard_encloser>
-	<li class="dbEntry" data-systemid="%%entryid%%">%%content%%</li>
+	<div class="dbEntry col-sm-12" data-systemid="%%entryid%%">%%content%%</div>
 </dashboard_encloser>
 
 <adminwidget_text>
@@ -1364,7 +1364,14 @@ The language switch surrounds the buttons
 </adminwidget_separator>
 
 <dashboard_wrapper>
-    <table class="dashBoard"><tr>%%entries%%</tr></table>
+
+    <div class="row" id="dashboard" data-columns>
+          %%entries%%
+    </div>
+
+
+
+    <script src="_skinwebpath_/js/salvattore/salvattore.min.js?_system_browser_cachebuster_"></script>
     <script type="text/javascript">
         KAJONA.admin.loader.loadFile('/core/module_dashboard/admin/scripts/dashboard.js', function() {
             KAJONA.admin.dashboard.init();

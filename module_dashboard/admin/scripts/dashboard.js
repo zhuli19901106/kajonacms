@@ -25,11 +25,11 @@ KAJONA.admin.dashboard = {
 
     init : function() {
 
-        $('.adminwidgetColumn > li').each(function () {
+        $('div.dbEntry').each(function () {
             var systemId = $(this).data('systemid');
             KAJONA.admin.ajax.genericAjaxCall('dashboard', 'getWidgetContent', systemId, function(data, status, jqXHR) {
 
-                content = $("li.dbEntry[data-systemid='"+systemId+"'] .content");
+                content = $("div.dbEntry[data-systemid='"+systemId+"'] .content");
 
                 if (status == 'success') {
                     var $parent = content.parent();
