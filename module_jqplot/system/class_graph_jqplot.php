@@ -422,7 +422,7 @@ class class_graph_jqplot implements interface_graph {
                         '{$strCoreDirectory}/module_jqplot/admin/scripts/js/jqplot/plugins/jqplot.cursor.js',
                         '{$strCoreDirectory}/module_jqplot/admin/scripts/js/jqplot/plugins/jqplot.dateAxisRenderer.js',
                         '{$strCoreDirectory}/module_jqplot/admin/scripts/js/jqplot/plugins/jqplot.enhancedLegendRenderer.js',
-                        '{$strCoreDirectory}/module_jqplot/admin/scripts/js/jqplot/plugins/jqplot.pieRenderer.js',
+
                         '{$strCoreDirectory}/module_jqplot/admin/scripts/js/jqplot/plugins/jqplot.highlighter.js',
                         '{$strCoreDirectory}/module_jqplot/admin/scripts/js/jqplot/plugins/jqplot.canvasOverlay.js',
 
@@ -430,11 +430,18 @@ class class_graph_jqplot implements interface_graph {
                         '{$strCoreDirectory}/module_jqplot/admin/scripts/js/custom/jquery.jqplot.custom.css'
 
                     ], function() {
-                        $.jqplot.sprintf.thousandsSeparator = '$strThousandsChar';
-                        $.jqplot.sprintf.decimalMark = '$strDecChar';
 
-                        var objChart_$strChartId = new KAJONA.admin.jqplotHelper.jqPlotChart('$strChartId', '$strTooltipId', '$strResizeableId', $strChartData, $strChartOptions, $strPostPlotOptions, $strDataPointObjects);
-                        objChart_$strChartId.render();
+                        KAJONA.admin.loader.loadFile([
+                            '{$strCoreDirectory}/module_jqplot/admin/scripts/js/jqplot/plugins/jqplot.pieRenderer.js',
+                            '{$strCoreDirectory}/module_jqplot/admin/scripts/js/jqplot/plugin_piwik/jqplot.pieLegend.js'
+
+                        ] , function() {
+                                $.jqplot.sprintf.thousandsSeparator = '$strThousandsChar';
+                                $.jqplot.sprintf.decimalMark = '$strDecChar';
+
+                                var objChart_$strChartId = new KAJONA.admin.jqplotHelper.jqPlotChart('$strChartId', '$strTooltipId', '$strResizeableId', $strChartData, $strChartOptions, $strPostPlotOptions, $strDataPointObjects);
+                                objChart_$strChartId.render();
+                        });
                     });
                 });
         </script>";

@@ -105,6 +105,9 @@ class class_graph_jqplot_seriesdata {
             $this->arrSeriesOptions["rendererOptions"]["sliceMargin"] = 2;
             $this->arrSeriesOptions["rendererOptions"]["shadowOffset"] = 0;
             $this->arrSeriesOptions["rendererOptions"]["highlightMouseOver"] = true;
+
+            //additionally set required global options
+            $arrGlobalOptions["legend"]["renderer"] = "$.jqplot.PieLegend";
         }
         else {
             throw new class_exception("Not a valid chart type", class_exception::$level_ERROR);
