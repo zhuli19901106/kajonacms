@@ -158,27 +158,23 @@
         </exec>
     </target>
 
-    <!-- start webserver -->
-    <target name="startWebserver">
-        <exec dir="${basedir}${projectPath}" executable="${path.php}" spawn="true">
+    <!-- executes selenium protractor tests but only on windows -->
+    <target name="protractor">
+        <exec dir="${basedir}${projectPath}" executable="${path.php}" spawn="true" osfamily="windows">
             <arg line="-S 127.0.0.1:8080"/>
         </exec>
         <echo message="Started webserver ..." />
         <sleep seconds="2" />
-    </target>
-
-    <!-- executes selenium protractor tests -->
-    <target name="protractor" depends="startWebserver">
-        <exec dir="${basedir}${jsPath}" executable="${path.node}">
+        <exec dir="${basedir}${jsPath}" executable="${path.node}" osfamily="windows">
             <arg line="./node_modules/protractor/bin/webdriver-manager update"/>
         </exec>
-        <exec dir="${basedir}${jsPath}" executable="${path.node}" spawn="true">
+        <exec dir="${basedir}${jsPath}" executable="${path.node}" spawn="true" osfamily="windows">
             <arg line="./node_modules/protractor/bin/webdriver-manager start"/>
         </exec>
         <echo message="Started selenium server ..." />
         <!-- wait for webdriver to start -->
         <sleep seconds="4" />
-        <exec dir="${basedir}${jsPath}" executable="${path.node}" failonerror="on">
+        <exec dir="${basedir}${jsPath}" executable="${path.node}" failonerror="on" osfamily="windows">
             <arg line="./node_modules/protractor/bin/protractor e2e/conf.js"/>
         </exec>
     </target>
