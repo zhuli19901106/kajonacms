@@ -1,5 +1,8 @@
 
 exports.config = {
     seleniumAddress: 'http://localhost:4444/wd/hub',
-    specs: ['frontend-spec.js']
+    specs: ['frontend-spec.js'],
+    capabilities: {
+        browserName: 'firefox'
+    }
 };

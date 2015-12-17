@@ -163,14 +163,19 @@
         <exec dir="${basedir}${projectPath}" executable="${path.php}" spawn="true">
             <arg line="-S 127.0.0.1:8080"/>
         </exec>
+        <echo message="Started webserver ..." />
         <sleep seconds="2" />
     </target>
 
     <!-- executes selenium protractor tests -->
     <target name="protractor" depends="startWebserver">
+        <exec dir="${basedir}${jsPath}" executable="${path.node}">
+            <arg line="./node_modules/protractor/bin/webdriver-manager update"/>
+        </exec>
         <exec dir="${basedir}${jsPath}" executable="${path.node}" spawn="true">
             <arg line="./node_modules/protractor/bin/webdriver-manager start"/>
         </exec>
+        <echo message="Started selenium server ..." />
         <!-- wait for webdriver to start -->
         <sleep seconds="4" />
         <exec dir="${basedir}${jsPath}" executable="${path.node}" failonerror="on">
