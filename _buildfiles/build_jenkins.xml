@@ -93,30 +93,30 @@
     <target name="buildSqliteFast" depends="
 		    								init,
 					    					buildProject, installProjectSqlite,
-					    					lint,phploc,phpunitFast,jasmine,
+					    					lint,phploc,phpunitFast,jasmine,protractor,
 					    					buildFullZip, buildLightZip, buildAllInOneZip" />
 
 
     <target name="buildSqliteFull" depends="
 		    								init,
 					    					buildProject, installProjectSqlite,
-					    					lint,phpunit,jasmine,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,generateDoxygenDocs,phpcb,
+					    					lint,phpunit,jasmine,protractor,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,generateDoxygenDocs,phpcb,
 					    					buildFullZip, buildLightZip, buildAllInOneZip" />
 
     <target name="buildMysql" depends="
 		    								init,
 					    					buildProject, installProjectMysql,
-					    					phpunitFast,jasmine" />
+					    					phpunitFast,jasmine,protractor" />
 
     <target name="buildOracle" depends="
 		    								init,
 					    					buildProject, installProjectOracle,
-					    					phpunitFast,jasmine" />
+					    					phpunitFast,jasmine,protractor" />
 
     <target name="buildPostgres" depends="
 		    								init,
 					    					buildProject, installProjectPostgres,
-					    					phpunitFast,jasmine" />
+					    					phpunitFast,jasmine,protractor" />
 
     <target name="buildFullZipOnly" depends="
                                             init,
@@ -155,6 +155,18 @@
     <target name="jasmine">
         <exec dir="${basedir}${jsPath}" executable="${path.node}" failonerror="on">
             <arg line="./node_modules/jasmine/bin/jasmine.js"/>
+        </exec>
+    </target>
+
+    <!-- executes selenium protractor tests -->
+    <target name="protractor">
+        <exec dir="${basedir}${jsPath}" executable="${path.node}" spawn="true">
+            <arg line="./node_modules/protractor/bin/webdriver-manager start"/>
+        </exec>
+        <!-- wait for webdriver to start -->
+        <sleep seconds="4" />
+        <exec dir="${basedir}${jsPath}" executable="${path.node}" failonerror="on">
+            <arg line="./node_modules/protractor/bin/protractor e2e/conf.js"/>
         </exec>
     </target>
 
