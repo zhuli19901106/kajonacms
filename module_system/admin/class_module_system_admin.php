@@ -809,6 +809,12 @@ JS;
             }
             $arrData[] = $arrRowData;
         }
+
+
+
+        $strReturn .= '<select name="%%name%%" id="%%name%%" class="form-control"><option>17.02.2016 10:44:22</option><option>17.02.2016 10:44:22</option></select>';
+
+
         $strReturn .= $this->objToolkit->dataTable($arrHeader, $arrData);
         $strReturn .= $this->objToolkit->getPageview($objArraySectionIterator, "system", "systemSessions");
 
@@ -862,7 +868,6 @@ JS;
      */
     public function actionGenericChangelog($strSystemid = "", $strSourceModule = "system", $strSourceAction = "genericChangelog", $bitBlockFolderview = false)
     {
-
         if (!$bitBlockFolderview && $this->getParam("bitBlockFolderview") == "") {
             $this->setArrModuleEntry("template", "/folderview.tpl");
         }
@@ -879,78 +884,107 @@ JS;
             $strReturn .= $this->objToolkit->formClose();
 
             return $strReturn;
-//            return "asd";
         }
+
+        $strTimePoint = $this->getParam("time_point");
+        $strTimePoint = !empty($strTimePoint) ? $strTimePoint : null;
+
+        $strTimeCompare = $this->getParam("time_compare");
+        $strTimeCompare = !empty($strTimeCompare) ? $strTimeCompare : null;
 
         $strReturn = "";
 //        check needed rights - done twice since public and callable by not only the controller
 //        if(!class_carrier::getInstance()->getObjRights()->validatePermissionString(class_rights::$STR_RIGHT_CHANGELOG, $this->getObjModule()))
 //            return $this->getLang("commons_error_permissions");
 
-        //showing a list using the pageview
-        $objArraySectionIterator = new class_array_section_iterator(class_module_system_changelog::getLogEntriesCount($strSystemid));
-        $objArraySectionIterator->setPageNumber((int)($this->getParam("pv") != "" ? $this->getParam("pv") : 1));
-        $objArraySectionIterator->setArraySection(class_module_system_changelog::getLogEntries($strSystemid, $objArraySectionIterator->calculateStartPos(), $objArraySectionIterator->calculateEndPos()));
+        // get time points
+        $arrTimes = class_module_system_changelog::getLogEntriesTimes($strSystemid);
 
-        $arrData = array();
-        $arrHeader = array();
-        $arrHeader[] = $this->getLang("commons_date");
-        $arrHeader[] = $this->getLang("change_user");
-        if ($strSystemid == "") {
-            $arrHeader[] = $this->getLang("change_module");
-        }
-        if ($strSystemid == "") {
-            $arrHeader[] = $this->getLang("change_record");
-        }
-        $arrHeader[] = $this->getLang("change_action");
-        $arrHeader[] = $this->getLang("change_property");
-        $arrHeader[] = $this->getLang("change_oldvalue");
-        $arrHeader[] = $this->getLang("change_newvalue");
+        $strReturn .= $this->objToolkit->formHeader(getLinkAdminHref("system", "genericChangeLog"));
+        $strReturn .= $this->objToolkit->formInputHidden("systemid", $this->getSystemid());
+        $strReturn .= $this->objToolkit->formInputHidden("folderview", "1");
+        $strReturn .= $this->objToolkit->formInputDropdown("time_point", array_merge(array("" => "Alle Einträge"), $arrTimes), "Zeitpunkt", $strTimePoint);
+        $strReturn .= $this->objToolkit->formInputDropdown("time_compare", array_merge(array("" => "Kein Vergleich"), $arrTimes), "Vergleich", $strTimeCompare);
+        $strReturn .= $this->objToolkit->formInputSubmit("Filter anwenden");
+        $strReturn .= $this->objToolkit->formClose();
 
-        /** @var $objOneEntry class_changelog_container */
-        foreach ($objArraySectionIterator as $objOneEntry) {
-            $arrRowData = array();
+        if (!empty($strTimePoint) && !empty($strTimeCompare)) {
+            $arrHeader = array();
+            $arrHeader[] = $this->getLang("change_property");
+            $arrHeader[] = dateToString($strTimePoint);
+            $arrHeader[] = dateToString($strTimeCompare);
 
-            /** @var interface_versionable|class_model $objTarget */
-            $objTarget = $objOneEntry->getObjTarget();
+            $objModel = class_objectfactory::getInstance()->getObject($strSystemid);
+            $objReflection = new class_reflection($objModel);
+            $arrProperties = $objReflection->getPropertiesWithAnnotation('@versionable');
+            $arrData = $this->getChangedProps($objModel, array_keys($arrProperties), new class_date($strTimePoint), new class_date($strTimeCompare));
 
-            $strOldValue = $objOneEntry->getStrOldValue();
-            $strNewValue = $objOneEntry->getStrNewValue();
+            $strReturn .= $this->objToolkit->dataTable($arrHeader, $arrData);
+        } else {
+            // showing a list using the pageview
+            $objArraySectionIterator = new class_array_section_iterator(class_module_system_changelog::getLogEntriesCount($strSystemid, $strTimePoint));
+            $objArraySectionIterator->setPageNumber((int)($this->getParam("pv") != "" ? $this->getParam("pv") : 1));
+            $objArraySectionIterator->setArraySection(class_module_system_changelog::getLogEntries($strSystemid, $objArraySectionIterator->calculateStartPos(), $objArraySectionIterator->calculateEndPos(), $strTimePoint));
 
-            if ($objTarget != null) {
-                $strOldValue = $objTarget->renderVersionValue($objOneEntry->getStrProperty(), $strOldValue);
-                $strNewValue = $objTarget->renderVersionValue($objOneEntry->getStrProperty(), $strNewValue);
-            }
-
-            $strOldValue = htmlStripTags($strOldValue);
-            $strNewValue = htmlStripTags($strNewValue);
-
-            $arrRowData[] = dateToString($objOneEntry->getObjDate());
-            $arrRowData[] = $this->objToolkit->getTooltipText(uniStrTrim($objOneEntry->getStrUsername(), 15), $objOneEntry->getStrUsername());
+            $arrData = array();
+            $arrHeader = array();
+            $arrHeader[] = $this->getLang("commons_date");
+            $arrHeader[] = $this->getLang("change_user");
             if ($strSystemid == "") {
-                $arrRowData[] = $objTarget != null ? $objTarget->getArrModule("modul") : "";
+                $arrHeader[] = $this->getLang("change_module");
             }
             if ($strSystemid == "") {
-                $arrRowData[] = $objTarget != null ? $this->objToolkit->getTooltipText(uniStrTrim($objTarget->getVersionRecordName(), 20), $objTarget->getVersionRecordName()." ".$objOneEntry->getStrSystemid()) : "";
+                $arrHeader[] = $this->getLang("change_record");
             }
-            $arrRowData[] = $objTarget != null ? $this->objToolkit->getTooltipText(uniStrTrim($objTarget->getVersionActionName($objOneEntry->getStrAction()), 15), $objTarget->getVersionActionName($objOneEntry->getStrAction())) : "";
-            $arrRowData[] = $objTarget != null ? $this->objToolkit->getTooltipText(uniStrTrim($objTarget->getVersionPropertyName($objOneEntry->getStrProperty()), 20), $objTarget->getVersionPropertyName($objOneEntry->getStrProperty())) : "";
-            $arrRowData[] = $this->objToolkit->getTooltipText(uniStrTrim($strOldValue, 20), $strOldValue);
-            $arrRowData[] = $this->objToolkit->getTooltipText(uniStrTrim($strNewValue, 20), $strNewValue);
+            $arrHeader[] = $this->getLang("change_action");
+            $arrHeader[] = $this->getLang("change_property");
+            $arrHeader[] = $this->getLang("change_oldvalue");
+            $arrHeader[] = $this->getLang("change_newvalue");
 
-            $arrData[] = $arrRowData;
+            /** @var $objOneEntry class_changelog_container */
+            foreach ($objArraySectionIterator as $objOneEntry) {
+                $arrRowData = array();
+
+                /** @var interface_versionable|class_model $objTarget */
+                $objTarget = $objOneEntry->getObjTarget();
+
+                $strOldValue = $objOneEntry->getStrOldValue();
+                $strNewValue = $objOneEntry->getStrNewValue();
+
+                if ($objTarget != null) {
+                    $strOldValue = $objTarget->renderVersionValue($objOneEntry->getStrProperty(), $strOldValue);
+                    $strNewValue = $objTarget->renderVersionValue($objOneEntry->getStrProperty(), $strNewValue);
+                }
+
+                $strOldValue = htmlStripTags($strOldValue);
+                $strNewValue = htmlStripTags($strNewValue);
+
+                $arrRowData[] = dateToString($objOneEntry->getObjDate());
+                $arrRowData[] = $this->objToolkit->getTooltipText(uniStrTrim($objOneEntry->getStrUsername(), 15), $objOneEntry->getStrUsername());
+                if ($strSystemid == "") {
+                    $arrRowData[] = $objTarget != null ? $objTarget->getArrModule("modul") : "";
+                }
+                if ($strSystemid == "") {
+                    $arrRowData[] = $objTarget != null ? $this->objToolkit->getTooltipText(uniStrTrim($objTarget->getVersionRecordName(), 20), $objTarget->getVersionRecordName()." ".$objOneEntry->getStrSystemid()) : "";
+                }
+                $arrRowData[] = $objTarget != null ? $this->objToolkit->getTooltipText(uniStrTrim($objTarget->getVersionActionName($objOneEntry->getStrAction()), 15), $objTarget->getVersionActionName($objOneEntry->getStrAction())) : "";
+                $arrRowData[] = $objTarget != null ? $this->objToolkit->getTooltipText(uniStrTrim($objTarget->getVersionPropertyName($objOneEntry->getStrProperty()), 20), $objTarget->getVersionPropertyName($objOneEntry->getStrProperty())) : "";
+                $arrRowData[] = $this->objToolkit->getTooltipText(uniStrTrim($strOldValue, 20), $strOldValue);
+                $arrRowData[] = $this->objToolkit->getTooltipText(uniStrTrim($strNewValue, 20), $strNewValue);
+
+                $arrData[] = $arrRowData;
+            }
+
+            $objManager = new class_module_packagemanager_manager();
+            if ($objManager->getPackage("phpexcel") != null) {
+                $strReturn .= $this->objToolkit->getContentToolbar(array(
+                    class_link::getLinkAdmin($this->getArrModule("modul"), "genericChangelogExportExcel", "&systemid=".$strSystemid, class_adminskin_helper::getAdminImage("icon_excel")." ".$this->getLang("change_export_excel"), "", "", false)
+                ));
+            }
+
+            $strReturn .= $this->objToolkit->dataTable($arrHeader, $arrData);
+            $strReturn .= $this->objToolkit->getPageview($objArraySectionIterator, $strSourceModule, $strSourceAction, "&systemid=".$strSystemid."&bitBlockFolderview=".$this->getParam("bitBlockFolderview"));
         }
-
-        $objManager = new class_module_packagemanager_manager();
-        if ($objManager->getPackage("phpexcel") != null) {
-            $strReturn .= $this->objToolkit->getContentToolbar(array(
-                class_link::getLinkAdmin($this->getArrModule("modul"), "genericChangelogExportExcel", "&systemid=".$strSystemid, class_adminskin_helper::getAdminImage("icon_excel")." ".$this->getLang("change_export_excel"), "", "", false)
-            ));
-        }
-
-        $strReturn .= $this->objToolkit->dataTable($arrHeader, $arrData);
-
-        $strReturn .= $this->objToolkit->getPageview($objArraySectionIterator, $strSourceModule, $strSourceAction, "&systemid=".$strSystemid."&bitBlockFolderview=".$this->getParam("bitBlockFolderview"));
 
         return $strReturn;
     }
@@ -1401,6 +1435,70 @@ JS;
         );
 
         return $arrStlyes;
+    }
+
+    private function getChangedProps(class_root $objTarget, array $arrProperties, class_date $objTargetDate, class_date $objCompareDate)
+    {
+        $arrLeftProps = class_module_system_changelog::getLogEntries($objTarget->getSystemid(), null, null, $objTargetDate);
+        $arrRightProps = class_module_system_changelog::getLogEntries($objTarget->getSystemid(), null, null, $objCompareDate);
+        $arrData = array();
+
+        $arrLeftProperties = array_map(function($objEntry){
+            return $objEntry->getStrProperty();
+        }, $arrLeftProps);
+        $arrRightProperties = array_map(function($objEntry){
+            return $objEntry->getStrProperty();
+        }, $arrRightProps);
+
+        $arrAllProperties = array_unique(array_merge($arrProperties, $arrLeftProperties, $arrRightProperties));
+
+        foreach ($arrAllProperties as $intI => $strProperty) {
+            $strLeftValue = $this->getNewValueFromChangelog($arrLeftProps, $strProperty);
+            if (empty($strLeftValue)) {
+                $strLeftValue = class_module_system_changelog::getValueForDate($objTarget->getSystemid(), $strProperty, $objTargetDate);
+            }
+
+            $strRightValue = $this->getNewValueFromChangelog($arrRightProps, $strProperty);
+            if (empty($strRightValue)) {
+                $strRightValue = class_module_system_changelog::getValueForDate($objTarget->getSystemid(), $strProperty, $objCompareDate);
+            }
+
+            // if both values are empty skip
+            if (empty($strLeftValue) && empty($strRightValue)) {
+                continue;
+            }
+
+            $strLeftValue = $objTarget->renderVersionValue($strProperty, $strLeftValue);
+            $strRightValue = $objTarget->renderVersionValue($strProperty, $strRightValue);
+            $bitChanged = $strLeftValue != $strRightValue;
+
+            $strLeftValue = htmlStripTags($strLeftValue);
+            $strRightValue = htmlStripTags($strRightValue);
+
+            $arrRowData = array();
+            $arrRowData[] = $objTarget != null ? $this->objToolkit->getTooltipText(uniStrTrim($objTarget->getVersionPropertyName($strProperty), 20), $objTarget->getVersionPropertyName($strProperty)) : "";
+            $arrRowData[] = $this->objToolkit->getTooltipText(uniStrTrim($strLeftValue, 20), $strLeftValue);
+            $arrRowData[] = $this->objToolkit->getTooltipText(uniStrTrim($strRightValue, 20), $strRightValue);
+
+            if ($bitChanged) {
+                $arrData[$intI . "\" style=\"background-color:#E99"] = $arrRowData;
+            } else {
+                $arrData[$intI] = $arrRowData;
+            }
+        }
+
+        return $arrData;
+    }
+
+    private function getNewValueFromChangelog(array $arrProps, $strPropertyName)
+    {
+        foreach ($arrProps as $objProp) {
+            if ($objProp->getStrProperty() == $strPropertyName) {
+                return $objProp->getStrNewValue();
+            }
+        }
+
+        return null;
     }
 }
 

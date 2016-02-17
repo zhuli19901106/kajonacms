@@ -476,7 +476,7 @@ class class_module_system_changelog {
      *
      * @return class_changelog_container[]
      */
-    public static function getLogEntries($strSystemidFilter, $intStart = null, $intEnd = null) {
+    public static function getLogEntries($strSystemidFilter, $intStart = null, $intEnd = null, $strDateFilter = null) {
 
         $arrParams = array();
 
@@ -488,6 +488,10 @@ class class_module_system_changelog {
 
             $arrParams[] = $strSystemidFilter;
 
+            if ($strDateFilter !== null) {
+                $strQuery .= " AND change_date = ? ";
+                $arrParams[] = $strDateFilter;
+            }
         }
         else {
             return array();
@@ -519,8 +523,7 @@ class class_module_system_changelog {
      *
      * @return int
      */
-    public static function getLogEntriesCount($strSystemidFilter) {
-
+    public static function getLogEntriesCount($strSystemidFilter, $strDateFilter = null) {
         $arrParams = array();
 
         if(validateSystemid($strSystemidFilter)) {
@@ -531,6 +534,10 @@ class class_module_system_changelog {
 
             $arrParams[] = $strSystemidFilter;
 
+            if ($strDateFilter !== null) {
+                $strQuery .= " AND change_date = ? ";
+                $arrParams[] = $strDateFilter;
+            }
         }
         else {
             return 0;
@@ -540,6 +547,28 @@ class class_module_system_changelog {
         return $arrRow["COUNT(*)"];
     }
 
+    /**
+     * Returns all possible change dates
+     *
+     * @param string $strSystemidFilter
+     * @return array
+     */
+    public static function getLogEntriesTimes($strSystemidFilter)
+    {
+        $strQuery = "  SELECT DISTINCT change_date
+                         FROM "._dbprefix_.self::getTableForClass(class_objectfactory::getInstance()->getClassNameForId($strSystemidFilter))."
+                        WHERE change_systemid = ?
+                     ORDER BY change_date DESC";
+
+        $arrRows = class_carrier::getInstance()->getObjDB()->getPArray($strQuery, array($strSystemidFilter));
+
+        $arrReturn = array();
+        foreach ($arrRows as $arrRow) {
+            $arrReturn[$arrRow["change_date"]] = dateToString($arrRow["change_date"]);
+        }
+
+        return $arrReturn;
+    }
 
     /**
      * Creates the list of logentries, based on a flexible but specific filter-list
